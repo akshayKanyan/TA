@@ -4,8 +4,7 @@
   "description": "login and list page",
   "main": "index.js",
   "scripts": {
-    "start": "webpack-dev-server --config ./webpack.config.dev.js --progress --colors",
-    "build": "webpack --config ./webpack.config.prod.js --progress --colors"
+    "start": "webpack-dev-server --config ./webpack.config.js --progress --colors"
   },
   "author": "akshay kanyan",
   "license": "ISC",
@@ -20,6 +19,7 @@
     "babel-loader": "7.0.0",
     "babel-preset-es2015": "^6.24.1",
     "babel-preset-react": "^6.24.1",
+    "babel-preset-stage-0": "^6.24.1",
     "babel-preset-stage-2": "^6.24.1",
     "clean-webpack-plugin": "^1.0.0",
     "css-loader": "^1.0.1",
