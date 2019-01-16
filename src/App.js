@@ -12,9 +12,10 @@ export default class App extends React.Component {
           <div className="col-sm-8 col-sm-offset-2">
             <Router>
               <div>
-                <PrivateRoute exact path="/" component={HomePage} />
+                <PrivateRoute exact path="/" />
                 <Route path="/login" component={LoginPage} />
                 <Route path="/signup" component={SignUpPage} />
+                <Route path="/page/:id" component={HomePage} />
               </div>
             </Router>
           </div>

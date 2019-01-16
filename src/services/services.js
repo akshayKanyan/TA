@@ -1,67 +1,82 @@
 export const userService = {
   login,
   logout,
-  getAll
+  getAllUsers,
+  createUser,
+  verifyToken
 };
 
 const config = {
   apiUrl: "https://api.prontoitlabs.com/api/v1"
 };
-function login(username, password) {
+
+function login(userName, password) {
   const requestOptions = {
     method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ username, password })
+    headers: {
+      "Content-Type": "application/json",
+      Accept: "application/json"
+    },
+    body: JSON.stringify({ userName, password })
   };
 
-  return fetch(`${config.apiUrl}/users/authenticate`, requestOptions)
-    .then(handleResponse)
-    .then(user => {
-      if (user) {
-        user.authdata = window.btoa(username + ":" + password);
-        localStorage.setItem("user", JSON.stringify(user));
+  return fetch(`${config.apiUrl}/user/login`, requestOptions).then(res => res.json()).then(user => {
+    if (user) {
+      if (user.errorMessage) {
+        return Promise.reject(user.errorMessage);
+      } else {
+        localStorage.setItem("token", user.data && user.data.token);
       }
+    }
+    return user;
+  });
+}
 
-      return user;
-    });
+function createUser(userName, password, gender) {
+  const requestOptions = {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      Accept: "application/json"
+    },
+    body: JSON.stringify({ userName, password, gender })
+  };
+
+  return fetch(`${config.apiUrl}/user`, requestOptions).then(res => res.json()).then(user => {
+    if (user && user.error) {
+      return Promise.reject(user.error);
+    }
+    return user;
+  });
 }
 
 function logout() {
-  localStorage.removeItem("user");
+  localStorage.removeItem("token");
 }
 
 function authHeader() {
-  let user = JSON.parse(localStorage.getItem("user"));
-  if (user && user.authdata) {
-    return { Authorization: "Basic " + user.authdata };
-  } else {
-    return {};
-  }
+  let token = localStorage.getItem("token");
+  return { "X-AUTH-TOKEN": token };
 }
 
-function getAll() {
+function getAllUsers(page = 0) {
   const requestOptions = {
     method: "GET",
     headers: authHeader()
   };
 
-  return fetch(`${config.apiUrl}/users`, requestOptions).then(handleResponse);
+  return fetch(`${config.apiUrl}/user?page=${page}&size=25`, requestOptions).then(_ => _.json()).then(users => {
+    return users;
+  });
 }
 
-function handleResponse(response) {
-  return response.json().then(text => {
-    const data = text && JSON.parse(text);
-    if (!response.ok) {
-      if (response.status === 401) {
-        // auto logout if 401 response returned from api
-        logout();
-        location.reload(true);
-      }
+function verifyToken(page = 0) {
+  const requestOptions = {
+    method: "POST",
+    headers: authHeader()
+  };
 
-      const error = (data && data.message) || response.statusText;
-      return Promise.reject(error);
-    }
-
+  return fetch(`${config.apiUrl}/user/verify-token`, requestOptions).then(_ => _.json()).then(data => {
     return data;
   });
 }

@@ -6,6 +6,11 @@ module.exports = {
   resolve: {
     extensions: [".js", ".jsx"]
   },
+  output: {
+      path: path.join(__dirname, 'public'),
+      filename: 'bundle.js',
+      publicPath: '/',
+  },
   module: {
     rules: [
       {
@@ -35,11 +40,5 @@ module.exports = {
   ],
   devServer: {
     historyApiFallback: true
-  },
-  externals: {
-    // global app config object
-    config: JSON.stringify({
-      apiUrl: "http://localhost:4000"
-    })
   }
 };
