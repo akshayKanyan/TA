@@ -58,6 +58,9 @@ class MainPage extends React.Component {
       <div className="col-md-10 col-md-offset-3">
         <h1>Hi!</h1>
         <h3>Users List</h3>
+        <h3>
+          you can visit <a href="http://yellow.live/blog">yellow.live/blog</a> for good pagination example build by me
+        </h3>
         {loading
           ? <em>Loading users...</em>
           : <div>
