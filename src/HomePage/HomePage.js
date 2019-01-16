@@ -96,9 +96,9 @@ class HomePage extends React.Component {
     return this.state.isValidated
       ? <MainPage {...this.props} />
       : <div className="col-md-10 col-md-offset-3">
-          <h1>{this.state.error ? "You are not logged in" : "LOADING ...."}</h1>
+          <h1>{this.state.error ? <span style={{ color: "red" }}>You are not logged in</span> : "LOADING ...."}</h1>
           <p>
-            <Link to="/login">Click here to login</Link>
+            <Link to="/login"><span style={{ color: "green" }}>Click here to login</span></Link>
           </p>
         </div>;
   }
